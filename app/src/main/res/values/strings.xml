@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">A4print</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_baidu_map">BaiduMapActivity</string>
+    <string name="selectPrinter">选择打印店:</string>
+    <string name="title_activity_manage">Manage</string>
+
+    <string name="idtxthint">用户名</string>
+    <string name="pwdtxthint">密码</string>
+    <string name="loginbtntext">登录</string>
+    <string name="forgot_pwd">忘记密码？</string>
+    <string name="loading">正在登录</string>
+    <string name="title_activity_alipay">AlipayActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_personal_info">PersonalInfoActivity</string>
+    <string name="title_activity_print">PrintActivity</string>
+    <string name="title_activity_delivery_address">DeliveryAddressActivity</string>
+    <string name="title_activity_modify">ModifyActivity</string>
+    <string name="title_activity_modify_address">ModifyAddressActivity</string>
+</resources>
