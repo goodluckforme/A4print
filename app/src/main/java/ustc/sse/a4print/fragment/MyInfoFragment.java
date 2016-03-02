@@ -18,6 +18,7 @@ import ustc.sse.a4print.User;
 import ustc.sse.a4print.activity.BaiduMapActivity;
 import ustc.sse.a4print.activity.DeliveryAddressActivity;
 import ustc.sse.a4print.activity.PersonalInfoActivity;
+import ustc.sse.a4print.activity.SettingsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +33,7 @@ public class MyInfoFragment extends Fragment {
     private RelativeLayout personalInfo;
     private RelativeLayout deliveryAddressLayout;
     private RelativeLayout searchPrinterByMap;
+    private RelativeLayout settingsLayout;
 
     public MyInfoFragment() {
         // Required empty public constructor
@@ -84,6 +86,14 @@ public class MyInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getActivity(), BaiduMapActivity.class);
+                startActivity(intent);
+            }
+        });
+        settingsLayout= (RelativeLayout) view.findViewById(R.id.myInfo_settings_layout);
+        settingsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(mContext, SettingsActivity.class);
                 startActivity(intent);
             }
         });

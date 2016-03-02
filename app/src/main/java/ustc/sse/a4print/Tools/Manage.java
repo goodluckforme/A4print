@@ -3,6 +3,7 @@ package ustc.sse.a4print.Tools;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -20,14 +21,20 @@ import ustc.sse.a4print.net.HostIp;
 
 public class Manage extends Activity {
 
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manage);
+        //setContentView(R.layout.activity_manage);
 
-        User user= (User) getApplication();
-        if (user.getEmail()!=null&&user.getPassword()!=null){
-            loginMethod(user.getEmail(),user.getPassword(),Manage.this);
+        preferences=getSharedPreferences("myinfo", MODE_PRIVATE);
+        editor=preferences.edit();
+        String email=preferences.getString("email","");
+        String password=preferences.getString("password","");
+        if (!email.equals("")&&!password.equals("")){
+            loginMethod(email,password,Manage.this);
         }
         else
         {
@@ -56,6 +63,8 @@ public class Manage extends Activity {
                     startActivity(intent);
                 } else {
                     Toast.makeText(context, "邮箱或密码错误！", Toast.LENGTH_SHORT).show();
+                    Intent intent=new Intent(context,LoginActivity.class);
+                    startActivity(intent);
                 }
             }
 

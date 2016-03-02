@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 
@@ -33,12 +34,22 @@ public class LoginActivity extends Activity {
     private TextView tvRegister;
     private AlertDialog loginProcessDialog;
     private Context context;
+
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login2);
         context=this;
-       mEmail= (EditText) findViewById(R.id.login_edtId);
+        initView();
+
+    }
+
+    private void initView() {
+        mEmail= (EditText) findViewById(R.id.login_edtId);
         mPassword= (EditText) findViewById(R.id.login_edtPwd);
         mBtnLogin= (Button) findViewById(R.id.login_btnLogin);
         tvRegister= (TextView) findViewById(R.id.login_tv_register);
@@ -81,6 +92,11 @@ public class LoginActivity extends Activity {
                     user.setEmail(strings[3]);
                     user.setPhoneNumber(strings[4]);
                     user.setPassword(strings[5]);
+                    preferences=getSharedPreferences("myinfo", MODE_PRIVATE);
+                    editor=preferences.edit();
+                    editor.putString("email",strings[3]);
+                    editor.putString("password",strings[5]);
+                    editor.commit();
                     Intent intent = new Intent(context, MainActivity.class);
                     startActivity(intent);
                 }

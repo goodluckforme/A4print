@@ -62,7 +62,7 @@
         <activity
             android:name=".Tools.Manage"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@android:style/Theme.NoDisplay" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -95,13 +95,13 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".activity.ModifyActivity"
-            android:label="@string/title_activity_modify"
+            android:name=".activity.ModifyAddressActivity"
+            android:label="@string/title_activity_modify_address"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".activity.ModifyAddressActivity"
-            android:label="@string/title_activity_modify_address"
+            android:name=".activity.SettingsActivity"
+            android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>

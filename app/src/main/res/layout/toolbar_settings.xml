@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/toolbar_message"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="45dp"
+    android:elevation="1dp"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/backarrow"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignParentLeft="true"
+        android:id="@+id/settings_cancel"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        android:src="@drawable/arrow_thin_left"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp"
         android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:src="@drawable/navigationbar_back_auto" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,7 +25,8 @@
         android:gravity="center"
         android:text="设置"
         android:textColor="#525252"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:id="@+id/textView5" />
 
 
 </RelativeLayout>

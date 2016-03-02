@@ -21,4 +21,5 @@
     <string name="title_activity_delivery_address">DeliveryAddressActivity</string>
     <string name="title_activity_modify">ModifyActivity</string>
     <string name="title_activity_modify_address">ModifyAddressActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 </resources>
