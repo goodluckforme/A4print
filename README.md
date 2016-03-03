@@ -8,4 +8,8 @@
 
 ![](https://github.com/LehmanHe/A4print/raw/master/picture/5.png)       ![](https://github.com/LehmanHe/A4print/raw/master/picture/6.png)
 
-![](https://github.com/LehmanHe/A4print/raw/master/picture/7.png)       ![](https://github.com/LehmanHe/A4print/raw/master/picture/8.png) 
+![](https://github.com/LehmanHe/A4print/raw/master/picture/7.png)       ![](https://github.com/LehmanHe/A4print/raw/master/picture/8.png)
+
+![](https://github.com/LehmanHe/A4print/raw/master/picture/9.png)      ![](https://github.com/LehmanHe/A4print/raw/master/picture/10.png)
+
+![](https://github.com/LehmanHe/A4print/raw/master/picture/11.png)     ![](https://github.com/LehmanHe/A4print/raw/master/picture/12.png)
