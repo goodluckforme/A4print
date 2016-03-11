@@ -100,7 +100,7 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-         v=inflater.inflate(R.layout.tab1,container,false);
+         v=inflater.inflate(R.layout.fragment_print,container,false);
         this.frg1context=this;
         initTab1();
         if (isFirstIn) {

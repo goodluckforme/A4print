@@ -398,7 +398,7 @@ public class BaiduMapActivity extends AppCompatActivity {
 
 
     /**
-     * 添加覆盖物
+     * 将打印店信息显示到地图，并定位到距离当前最近的打印店
      *
      * @param infos
      */
@@ -406,8 +406,11 @@ public class BaiduMapActivity extends AppCompatActivity {
     {
         mBaiduMap.clear();
         LatLng latLng = null;
+        LatLng mLatLng=new LatLng(mLatitude,mLongitude);
+        LatLng closerLatLng=null;
         Marker marker = null;
         OverlayOptions options;
+        double distance=Double.MAX_VALUE;
         for (Info info : infos)
         {
             // 经纬度
@@ -419,11 +422,14 @@ public class BaiduMapActivity extends AppCompatActivity {
             Bundle arg0 = new Bundle();
             arg0.putSerializable("info", info);
             marker.setExtraInfo(arg0);
+            if (distance>DistanceUtil.getDistance(latLng,mLatLng)){
+                distance=DistanceUtil.getDistance(latLng,mLatLng);
+                closerLatLng=latLng;
+            }
         }
 
-        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
+        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(closerLatLng);
         mBaiduMap.setMapStatus(msu);
-
     }
 
     /**

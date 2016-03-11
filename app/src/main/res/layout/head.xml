@@ -61,7 +61,7 @@
                 android:textColor="@android:color/white"
                 android:id="@+id/head_tipsTextView"
                 android:textSize="20dp"
-                android:text="下拉刷新"/>
+                android:text=""/>
 
             <!-- 最近更新 -->
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.flyco.animation.BaseAnimatorSet;
@@ -73,16 +75,17 @@ public class OrderFragment extends ListFragment{
     final int DOWN = 1;
 
     private  TextView noOrders;
+    private OrderFragment mContext;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.tab2,container,false);
+        View v=inflater.inflate(R.layout.fragment_order,container,false);
         gestureDetector=new GestureDetector(getActivity(),onGestureListener);
         noOrders= (TextView) v.findViewById(R.id.no_orders);
         adapter = new MyAdapter(getActivity());
         reLoadOrders(false);
         //setListAdapter(adapter);
-
+        mContext=this;
         return v;
     }
 
@@ -144,6 +147,7 @@ public class OrderFragment extends ListFragment{
         public LinearLayout detailLayout;
         public TextView deliveryInfo;
         public LinearLayout twoDimension;
+        public LinearLayout moreLayout;
     }
 
 
@@ -191,6 +195,7 @@ public class OrderFragment extends ListFragment{
                 holder.mDetailData= (List<Map<String, Object>>) mOrderData.get(position).get("filesInfo");
                 holder.deliveryInfo= (TextView) convertView.findViewById(R.id.tv_item_delivery_info);
                 holder.twoDimension= (LinearLayout) convertView.findViewById(R.id.two_dimension);
+                holder.moreLayout= (LinearLayout) convertView.findViewById(R.id.order_item_more_layout);
                 for (int i=0;i<holder.mDetailData.size();i++){
                     ViewGroup rootView= (ViewGroup) mInflater.inflate(R.layout.item_detail,null);
                     TextView fileName= (TextView) rootView.findViewById(R.id.tv_item_fileName);
@@ -280,6 +285,12 @@ public class OrderFragment extends ListFragment{
                     //dialog.createQRImage("lehman");
                 }
             });
+            holder.moreLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    initPopWindow(v,mOrderData.get(position).get("orderId").toString());
+                }
+            });
             return convertView;
         }
 
@@ -362,7 +373,8 @@ public class OrderFragment extends ListFragment{
                                 filePages += file.getInt("filePages") * file.getInt("perFileCopies");
                             }
                             Map<String, Object> map0 = new HashMap<String, Object>();
-                            map0.put("printerName", userInfo.get("address").toString());
+                            map0.put("printerName", userInfo.get("printShopName").toString());
+                            map0.put("printerAddress",userInfo.getString("address"));
                             map0.put("customerName", userInfo.getString("userName"));
                             map0.put("customerPhone", userInfo.getString("teleNumber"));
                             map0.put("orderNo", order1.getString("orderNo"));
@@ -411,7 +423,7 @@ public class OrderFragment extends ListFragment{
         });
     }
 
-    private void NormalDialogStyleOne(final String orderNo) {
+    private void NormalDialogStyleOne(final String orderId) {
         final NormalDialog dialog = new NormalDialog(getActivity());
         BaseAnimatorSet bas_in = new FlipVerticalSwingEnter();
         BaseAnimatorSet bas_out = new FadeExit();
@@ -430,7 +442,7 @@ public class OrderFragment extends ListFragment{
             @Override
             public void onBtnClick() {
 
-                deletedOrder(orderNo);
+                deletedOrder(orderId);
                 dialog.dismiss();
             }
         });
@@ -480,6 +492,45 @@ public class OrderFragment extends ListFragment{
             return  null;
         }
     }
+
+    private void initPopWindow(View v, final String orderId) {
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.item_popup, null, false);
+        TextView btn_delete = (TextView) view.findViewById(R.id.btn_delete);
+        //1.构造一个PopupWindow，参数依次是加载的View，宽高
+        final PopupWindow popWindow = new PopupWindow(view,100,100, true);
+
+        popWindow.setAnimationStyle(R.anim.anim_pop);  //设置加载动画
+
+        //这些为了点击非PopupWindow区域，PopupWindow会消失的，如果没有下面的
+        //代码的话，你会发现，当你把PopupWindow显示出来了，无论你按多少次后退键
+        //PopupWindow并不会关闭，而且退不出程序，加上下述代码可以解决这个问题
+        popWindow.setTouchable(true);
+        popWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+                // 这里如果返回true的话，touch事件将被拦截
+                // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
+            }
+        });
+        popWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));    //要为popWindow设置一个背景才有效
+
+
+        //设置popupWindow显示的位置，参数依次是参照View，x轴的偏移量，y轴的偏移量
+        popWindow.showAsDropDown(v, -66, -20);
+
+        //设置popupWindow里的按钮的事件
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               NormalDialogStyleOne(orderId);
+                popWindow.dismiss();
+            }
+        });
+    }
+
+
+
     class  OrderDetail{
         private String fileName;
         private String filePages;
