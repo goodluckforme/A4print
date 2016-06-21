@@ -13,8 +13,7 @@ import com.loopj.android.http.RequestParams;
 
 import cz.msebera.android.httpclient.Header;
 import ustc.sse.a4print.activity.LoginActivity;
-import ustc.sse.a4print.R;
-import ustc.sse.a4print.User;
+import ustc.sse.a4print.model.User;
 import ustc.sse.a4print.activity.MainActivity;
 import ustc.sse.a4print.net.AsyncHttpCilentUtil;
 import ustc.sse.a4print.net.HostIp;

@@ -129,25 +129,13 @@ public class DocumentFragment extends ListFragment {
                 }
                 if(list.size()>0) {
                    PrintFragment listener;
-//                    if (PrintFragment.frg1context==null)
-//                    {
-////                        android.support.v4.app.FragmentTransaction transaction=getActivity().getSupportFragmentManager().beginTransaction();
-////                        transaction.add(R.id.contentLayout, new PrintFragment(), "打印").commit();
-////                        getActivity().getSupportFragmentManager().executePendingTransactions();
-//                         listener= (PrintFragment) getActivity().getSupportFragmentManager().findFragmentByTag("打印");
-//
-//                        getActivity().getSupportFragmentManager().executePendingTransactions();
-//                    }
-//                    else {
-//                         listener = PrintFragment.frg1context;
-//                    }
-//                    listener.documentPageToPrint(list.size());
                     MainActivity.mFragmentTabHost.doTabChanged("打印",getFragmentManager().beginTransaction()).commit();
                     getActivity().getSupportFragmentManager().executePendingTransactions();
                     listener= (PrintFragment) getActivity().getSupportFragmentManager().findFragmentByTag("打印");
                     PrintFragment.mDocData = list;
                     PrintFragment.myDocAdapter.notifyDataSetChanged();
                    listener.reSetListHeight();
+                    MainActivity.mFragmentTabHost.setCurrentTabByTag("打印");
                 }
                 else{
                     T.showShort(getActivity(),"未选中文件！");

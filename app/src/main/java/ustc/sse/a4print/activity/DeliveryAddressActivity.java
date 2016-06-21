@@ -26,7 +26,7 @@ import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 import ustc.sse.a4print.R;
-import ustc.sse.a4print.User;
+import ustc.sse.a4print.model.User;
 import ustc.sse.a4print.net.AsyncHttpCilentUtil;
 import ustc.sse.a4print.net.HostIp;
 
@@ -36,8 +36,8 @@ public class DeliveryAddressActivity extends ListActivity implements ModifyAddre
     private List<Map<String, String>> list = new ArrayList<Map<String, String>>();
     private DeliveryAddressAdapter adapter;
     public static Context context;
-
     private LinearLayout addAddressLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

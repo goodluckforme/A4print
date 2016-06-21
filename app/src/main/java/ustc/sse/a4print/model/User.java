@@ -1,4 +1,4 @@
-package ustc.sse.a4print;
+package ustc.sse.a4print.model;
 
 import android.app.Application;
 

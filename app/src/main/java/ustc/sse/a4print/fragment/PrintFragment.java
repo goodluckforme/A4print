@@ -45,10 +45,11 @@ import cz.msebera.android.httpclient.Header;
 import dmax.dialog.SpotsDialog;
 import ustc.sse.a4print.R;
 import ustc.sse.a4print.Tools.T;
-import ustc.sse.a4print.User;
-import ustc.sse.a4print.activity.AlipayActivity;
+import ustc.sse.a4print.model.User;
 import ustc.sse.a4print.activity.BaiduMapActivity;
 import ustc.sse.a4print.activity.MainActivity;
+import ustc.sse.a4print.activity.PrintShopActivity;
+import ustc.sse.a4print.alipay.PayDemoActivity;
 import ustc.sse.a4print.net.AsyncHttpCilentUtil;
 import ustc.sse.a4print.net.HostIp;
 
@@ -56,8 +57,14 @@ import ustc.sse.a4print.net.HostIp;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PrintFragment extends ListFragment implements BaiduMapActivity.PrinterSelectListener,MainActivity.AutoUploadFileListener,DocumentFragment.DocumentPageToPrintListener {
+public class PrintFragment extends ListFragment implements BaiduMapActivity.PrinterSelectListener,MainActivity.AutoUploadFileListener,DocumentFragment.DocumentPageToPrintListener,PrintShopActivity.SelectThisShopListener {
 
+    public static int PRINT_SHOP_RESULT_CODE=5;
+    private static String DISCOUNT="1";
+    private static String NO_DISCOUNT="0";
+
+    private static String DIRECTPRINT="1";
+    private static String NOT_DIRECTPRINT="2";
 
     private View v;
     private TextView tvSelectedPrinter;
@@ -110,7 +117,7 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
             map.put("docPages_old","");
             map.put("docCopies", "1");
             map.put("docPath", "docPath");
-            map.put("printType","打印类型");
+            map.put("printType","设置打印类型");
             list.add(map);
             isFirstIn=false;
         }
@@ -127,21 +134,6 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
         super.onResume();
         if (mDocData.size()>0) {
             reSetListViewHeight();
-//            for (Map<String, Object> item : mDocData) {
-//
-//
-//                Map<String, Object> map = new HashMap<String, Object>();
-//                map.put("docName", item.get("docName").toString());
-//                map.put("docPages", item.get("docPages").toString());
-//                map.put("docPages_old", item.get("docPages_old".toString()));
-//                map.put("docCopies", "1");
-//                map.put("docPath", item.get("docPath").toString());
-//                map.put("printType", "打印类型");
-//                list.add(map);
-//                mDocData = list;
-//                myDocAdapter.notifyDataSetChanged();
-//                reSetListViewHeight();
-//            }
         }
     }
 
@@ -165,8 +157,8 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
                             String addressStr = address.getString("address");
                             String addressId = address.getString("id");
                             String printerId = address.getString("userId");
-                            printAddMap.put(addressStr, addressId);
-                            printAddToIdMap.put(addressStr, printerId);
+                            printAddMap.put(address.getString("printShopName"), addressId);
+                            printAddToIdMap.put(address.getString("printShopName"), printerId);
                             testItems.add(new DialogMenuItem(addressStr, R.mipmap.ic_winstyle_album));
                         }
                     }
@@ -261,7 +253,7 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
                 map.put("docPages_old", "");
                 map.put("docCopies", "1");
                 map.put("docPath", "docPath");
-                map.put("printType","打印类型");
+                map.put("printType","设置打印类型");
                 list.add(map);
                 mDocData = list;
                 myDocAdapter.notifyDataSetChanged();
@@ -316,19 +308,21 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
         selectPrinterLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isFold) {
-                    isFold=false;
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) selectPrinterOptionsLayout.getLayoutParams();
-                    params.setMargins(0, 1, 0, 0);
-                    selectPrinterOptionsLayout.setVisibility(View.VISIBLE);
-                    selectPrinterOptionsLayout.setLayoutParams(params);
-                }else{
-                    isFold=true;
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) selectPrinterOptionsLayout.getLayoutParams();
-                    params.setMargins(0, -100, 0, 0);
-                    selectPrinterOptionsLayout.setVisibility(View.INVISIBLE);
-                    selectPrinterOptionsLayout.setLayoutParams(params);
-                }
+                Intent intent=new Intent(getContext(), PrintShopActivity.class);
+                startActivityForResult(intent,PRINT_SHOP_RESULT_CODE);
+//                if (isFold) {
+//                    isFold=false;
+//                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) selectPrinterOptionsLayout.getLayoutParams();
+//                    params.setMargins(0, 1, 0, 0);
+//                    selectPrinterOptionsLayout.setVisibility(View.VISIBLE);
+//                    selectPrinterOptionsLayout.setLayoutParams(params);
+//                }else{
+//                    isFold=true;
+//                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) selectPrinterOptionsLayout.getLayoutParams();
+//                    params.setMargins(0, -100, 0, 0);
+//                    selectPrinterOptionsLayout.setVisibility(View.INVISIBLE);
+//                    selectPrinterOptionsLayout.setLayoutParams(params);
+//                }
             }
         });
     }
@@ -336,7 +330,7 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
     private boolean orderDataValidate() {
         for(int i=0;i<mDocData.size();i++){
             if(mDocData.get(i).get("docName").toString().trim().equals("")
-                    ||mDocData.get(i).get("printType").toString().trim().equals("打印类型"))
+                    ||mDocData.get(i).get("printType").toString().trim().equals("设置打印类型"))
             {
                 return false;
             }
@@ -353,6 +347,7 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
         ArrayList perFileCopiesArray = new ArrayList();
         ArrayList perTotalPriceArray = new ArrayList();
         ArrayList perPrintTypeArray = new ArrayList();
+        ArrayList perPriceTypeArray = new ArrayList();
         double totalPrice=0;
         for(int i=0;i<mDocData.size();i++){
             String fileNameStr=mDocData.get(i).get("docName").toString().trim();
@@ -376,7 +371,8 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
             double item=Integer.parseInt(mDocData.get(i).get("docPages").toString())*Integer.parseInt(mDocData.get(i).get("docCopies").toString())*perPrice;
             totalPrice+=item;
             perTotalPriceArray.add(item+"");
-            perPrintTypeArray.add(perPrice);
+            perPrintTypeArray.add(mDocData.get(i).get("printType").toString());
+            perPriceTypeArray.add(perPrice);
         }
 
 
@@ -396,6 +392,11 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
         params.put("perFileCopiesArray", JSON.toJSONString(perFileCopiesArray));
         params.put("perTotalPriceArray", JSON.toJSONString(perTotalPriceArray));
         params.put("perPrintTypeArray", JSON.toJSONString(perPrintTypeArray));
+        params.put("perPriceTypeArray", JSON.toJSONString(perPriceTypeArray));
+
+        params.put("discount",NO_DISCOUNT);
+        params.put("directPrint",DIRECTPRINT);
+        params.put("remark","备注信息");
 
         AsyncHttpClient client= AsyncHttpCilentUtil.getInstance(getActivity());
         client.post("http://"+HostIp.ip+"/A4print/saveOrder.do", params, new JsonHttpResponseHandler() {
@@ -403,9 +404,27 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 submitProcessDialog.dismiss();
                 JSONObject object = response;
-                    isSuccess=true;
-                Intent intent=new Intent(getActivity(),AlipayActivity.class);
-                startActivity(intent);
+                JSONObject result=null;
+                try {
+                    isSuccess=object.getBoolean("success");
+                    result = object.getJSONObject("result");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (isSuccess) {
+                    String totalPrice=null;
+                    String orderNo=null;
+                    try {
+                        totalPrice=result.getString("totalPrice");
+                        orderNo=result.getString("orderNo");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Intent intent = new Intent(getActivity(), PayDemoActivity.class);
+                    intent.putExtra("orderNo",orderNo);
+                    intent.putExtra("totalPrice",totalPrice);
+                    startActivity(intent);
+                }
             }
 
             @Override
@@ -449,7 +468,7 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
             map.put("docPages_old", "");
             map.put("docCopies", "1");
             map.put("docPath", "docPath");
-            map.put("printType", "打印类型");
+            map.put("printType", "设置打印类型");
             list.add(map);
         }
         mDocData = list;
@@ -461,7 +480,6 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
     public void reSetListHeight() {
         reSetListViewHeight();
     }
-
 
     public final class ViewHolder{
     public ImageView docImage;
@@ -790,7 +808,7 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
         final NormalListDialog dialog = new NormalListDialog(getActivity(), printTypeList);
         BaseAnimatorSet bas_in = new FlipVerticalSwingEnter();
         BaseAnimatorSet bas_out = new FadeExit();
-        dialog.title("打印类型")//
+        dialog.title("设置打印类型")//
                 .showAnim(bas_in)//
                 .dismissAnim(bas_out)//
                 .show();
@@ -806,9 +824,15 @@ public class PrintFragment extends ListFragment implements BaiduMapActivity.Prin
     }
 
     @Override
-    public void printerSelected(String printerId) {
+    public void printerSelected(String printShopName) {
 
-        tvSelectedPrinter.setText(printerId);
+        tvSelectedPrinter.setText(printShopName);
+        loadPrice(printAddToIdMap.get(tvSelectedPrinter.getText().toString().trim()));
+    }
+
+    @Override
+    public void selectedThisShop(String printShopName) {
+        tvSelectedPrinter.setText(printShopName);
         loadPrice(printAddToIdMap.get(tvSelectedPrinter.getText().toString().trim()));
     }
 

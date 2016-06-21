@@ -3,15 +3,11 @@ package ustc.sse.a4print.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -21,7 +17,6 @@ import cz.msebera.android.httpclient.Header;
 import ustc.sse.a4print.R;
 import ustc.sse.a4print.Tools.T;
 import ustc.sse.a4print.Tools.UserInfoValidator;
-import ustc.sse.a4print.User;
 import ustc.sse.a4print.net.AsyncHttpCilentUtil;
 import ustc.sse.a4print.net.HostIp;
 

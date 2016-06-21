@@ -9,12 +9,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ustc.sse.a4print.R;
-import ustc.sse.a4print.User;
+import ustc.sse.a4print.model.User;
 import ustc.sse.a4print.activity.BaiduMapActivity;
 import ustc.sse.a4print.activity.DeliveryAddressActivity;
 import ustc.sse.a4print.activity.PersonalInfoActivity;

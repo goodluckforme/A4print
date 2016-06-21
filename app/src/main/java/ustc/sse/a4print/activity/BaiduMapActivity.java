@@ -224,12 +224,12 @@ public class BaiduMapActivity extends AppCompatActivity {
                 }
             }
         });
-       btnSeletedPrinter= (Button) findViewById(R.id.btn_select_printer);
+        btnSeletedPrinter= (Button) findViewById(R.id.btn_select_printer);
         btnSeletedPrinter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PrinterSelectListener psl= PrintFragment.frg1context;
-                psl.printerSelected(address.getText().toString());
+                psl.printerSelected(printerName.getText().toString());
                 finish();
             }
         });

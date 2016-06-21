@@ -30,7 +30,7 @@ import ustc.sse.a4print.Tools.ActivityCollector;
 import ustc.sse.a4print.Tools.CallbackBundle;
 import ustc.sse.a4print.Tools.DensityUtil;
 import ustc.sse.a4print.Tools.OpenFileDialog;
-import ustc.sse.a4print.User;
+import ustc.sse.a4print.model.User;
 import ustc.sse.a4print.fragment.DocumentFragment;
 import ustc.sse.a4print.fragment.HomeFragment;
 import ustc.sse.a4print.fragment.MyInfoFragment;
@@ -134,6 +134,10 @@ public class MainActivity extends FragmentActivity {
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         textView.setCompoundDrawables(null, drawable, null, null);
         return view;
+    }
+
+    public void clickTheTab(){
+        getTabView(1).callOnClick();
     }
 
     private View getMiddleTabView(int index) {

@@ -130,14 +130,14 @@
             android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/timeline_icon_redirect" />
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/setting" />
             <TextView
                 android:id="@+id/print_printType_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="打印类型"/>
+                android:text=" 设置打印类型"/>
         </LinearLayout>
     </LinearLayout>
 

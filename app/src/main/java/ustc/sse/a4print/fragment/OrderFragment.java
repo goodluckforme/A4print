@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.Base64;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -53,6 +54,7 @@ import ustc.sse.a4print.Tools.CustomListView;
 import ustc.sse.a4print.Tools.QRCodeUtil;
 import ustc.sse.a4print.Tools.T;
 import ustc.sse.a4print.activity.BaiduMapActivity;
+import ustc.sse.a4print.alipay.PayDemoActivity;
 import ustc.sse.a4print.dialog.TwoDimensionDialog;
 import ustc.sse.a4print.net.AsyncHttpCilentUtil;
 import ustc.sse.a4print.net.HostIp;
@@ -139,7 +141,6 @@ public class OrderFragment extends ListFragment{
         public TextView orderState;
         public TextView totalPrice;
         //public TextView delectOrder;
-        public LinearLayout toGetFiles;
         public LinearLayout toPay;
         public ListView  detialListview;
         public LinearLayout orderContainer;
@@ -189,7 +190,6 @@ public class OrderFragment extends ListFragment{
                 holder.printerName= (TextView) convertView.findViewById(R.id.tv_item_printerName);
                 holder.orderState= (TextView) convertView.findViewById(R.id.tv_item_orderState);
                 holder.totalPrice= (TextView) convertView.findViewById(R.id.tv_item_totalPrice);
-                holder.toGetFiles= (LinearLayout) convertView.findViewById(R.id.btn_item_toGetFiles);
                 holder.toPay= (LinearLayout) convertView.findViewById(R.id.btn_item_toPay);
                 holder.orderContainer= (LinearLayout) convertView.findViewById(R.id.order_container);
                 holder.mDetailData= (List<Map<String, Object>>) mOrderData.get(position).get("filesInfo");
@@ -204,9 +204,9 @@ public class OrderFragment extends ListFragment{
                     TextView price= (TextView) rootView.findViewById(R.id.tv_item_price);
                     ImageView fileType= (ImageView) rootView.findViewById(R.id.iv_item_fileType);
                     fileName.setText(holder.mDetailData.get(i).get("fileName").toString());
-                    filePages.setText("X "+holder.mDetailData.get(i).get("filePages").toString()+" 页");
-                    fileCopies.setText("X "+holder.mDetailData.get(i).get("fileCopies").toString()+" 份");
-                    price.setText("X " + holder.mDetailData.get(i).get("price").toString() + " 元/页");
+                    filePages.setText("  "+holder.mDetailData.get(i).get("filePages").toString()+" 页");
+                    fileCopies.setText("  "+holder.mDetailData.get(i).get("fileCopies").toString()+" 份");
+                    price.setText("   小计：" + holder.mDetailData.get(i).get("price").toString() + " 元");
                     String type=holder.mDetailData.get(i).get("fileName").toString().substring(holder.mDetailData.get(i).get("fileName").toString().indexOf(".")+1,holder.mDetailData.get(i).get("fileName").toString().length());
                     if (type.equals("doc")){
                         fileType.setImageResource(R.drawable.doc);
@@ -252,7 +252,12 @@ public class OrderFragment extends ListFragment{
             }
             holder.printerName.setText(mOrderData.get(position).get("printerName").toString());
             holder.orderState.setText(mOrderData.get(position).get("orderState").toString());
-
+            if (!mOrderData.get(position).get("orderState").toString().equals("未付款")){
+                holder.toPay.setVisibility(View.GONE);
+            }
+            else {
+                holder.twoDimension.setVisibility(View.GONE);
+            }
             if (mOrderData.get(position).get("deliveryWay").toString().trim().equals("2")){
                 holder.deliveryInfo.setText("取件方式：配送    配送费：5.00元");
                 holder.totalPrice.setText("订单总额 " +new Double(Double.parseDouble(mOrderData.get(position).get("totalPrice").toString())).toString()+ " 元");
@@ -260,29 +265,19 @@ public class OrderFragment extends ListFragment{
                 holder.deliveryInfo.setText("取件方式：自取");
                 holder.totalPrice.setText("订单总额 " + mOrderData.get(position).get("totalPrice").toString() + " 元");
             }
-            holder.toGetFiles.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i=new Intent(getActivity(),BaiduMapActivity.class);
-                    startActivity(i);
-                }
-            });
             holder.toPay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Intent intent = new Intent(getActivity(), PayDemoActivity.class);
+                    intent.putExtra("orderNo",mOrderData.get(position).get("orderNo").toString());
+                    intent.putExtra("totalPrice",mOrderData.get(position).get("totalPrice").toString());
+                    startActivity(intent);
                 }
             });
             holder.twoDimension.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Bitmap bitmap=createQRImage("姓名："+mOrderData.get(position).get("customerName").toString()+"\n电话："+mOrderData.get(position).get("customerPhone").toString()+"\n订单号："+mOrderData.get(position).get("orderNo").toString());
-                    Resources res = getActivity().getResources();
-                    Bitmap logo = BitmapFactory.decodeResource(res, R.drawable.qrcode_logo);
-                    Bitmap bitmap = QRCodeUtil.createQRImage("姓名：" + mOrderData.get(position).get("customerName").toString() + "\n电话：" + mOrderData.get(position).get("customerPhone").toString() + "\n订单号：" + mOrderData.get(position).get("orderNo").toString(), 600, 600, logo);
-                    TwoDimensionDialog dialog = new TwoDimensionDialog(bitmap);
-                    dialog.show(getActivity().getFragmentManager(), "twoDim");
-                    //dialog.createQRImage("lehman");
+                    getQRCode(mOrderData.get(position).get("orderNo").toString());
                 }
             });
             holder.moreLayout.setOnClickListener(new View.OnClickListener() {
@@ -294,6 +289,14 @@ public class OrderFragment extends ListFragment{
             return convertView;
         }
 
+    }
+
+    private void showQRImage(String qrCode) {
+        Resources res = getActivity().getResources();
+        Bitmap logo = BitmapFactory.decodeResource(res, R.drawable.qrcode_logo);
+        Bitmap bitmap = QRCodeUtil.createQRImage(qrCode, 600, 600, logo);
+        TwoDimensionDialog dialog = new TwoDimensionDialog(bitmap);
+        dialog.show(getActivity().getFragmentManager(), "twoDim");
     }
 
     private void deletedOrder(String orderId) {
@@ -313,6 +316,39 @@ public class OrderFragment extends ListFragment{
                         T.showShort(getActivity(), "哎哟,没删掉啊");
                     }
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                System.out.println("error" + responseString);
+            }
+        });
+    }
+
+    private void getQRCode(String orderNo) {
+        RequestParams params=new RequestParams();
+        params.put("orderNo", orderNo);
+        AsyncHttpClient client= AsyncHttpCilentUtil.getInstance(getActivity());
+        client.post("http://"+ HostIp.ip+"/A4print/getEncodeOrderInfoByOderNo.do", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                JSONObject object = response;
+                try {
+                    boolean mes=object.getBoolean("success");
+                    if (mes){
+                        String qrCode=object.getString("result");
+                        showQRImage(qrCode);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -367,7 +403,7 @@ public class OrderFragment extends ListFragment{
                                 map1.put("fileName", file.getString("fileName"));
                                 map1.put("filePages", file.getInt("filePages"));
                                 map1.put("fileCopies", file.getInt("perFileCopies"));
-                                map1.put("price", file.getString("printType"));//每页的价格
+                                map1.put("price", file.getString("perFilePrice"));//每页的价格
                                 map1.put("perFilePrice", file.getString("perFilePrice"));//当前文档的打印价格
                                 orderInfo.add(map1);
                                 filePages += file.getInt("filePages") * file.getInt("perFileCopies");
