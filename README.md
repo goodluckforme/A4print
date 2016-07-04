@@ -2,9 +2,8 @@
 一个在线云打印平台（android部分）
 
 
-![](https://github.com/LehmanHe/A4print/raw/master/picture/1.png)       ![](https://github.com/LehmanHe/A4print/raw/master/picture/2.png)
-
-![](https://github.com/LehmanHe/A4print/raw/master/picture/3.png)       ![](https://github.com/LehmanHe/A4print/raw/master/picture/4.png) 
+![](https://github.com/LehmanHe/A4print/raw/master/picture/1.png)   ![](https://github.com/LehmanHe/A4print/raw/master/picture/a1.png)
+![](https://github.com/LehmanHe/A4print/raw/master/picture/a2.png)  ![](https://github.com/LehmanHe/A4print/raw/master/picture/a3.png)  ![](https://github.com/LehmanHe/A4print/raw/master/picture/a4.png)  ![](https://github.com/LehmanHe/A4print/raw/master/picture/a5.png)
 
 ![](https://github.com/LehmanHe/A4print/raw/master/picture/5.png)       ![](https://github.com/LehmanHe/A4print/raw/master/picture/6.png)
 
