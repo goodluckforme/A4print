@@ -30,6 +30,7 @@ import ustc.sse.a4print.model.User;
 import ustc.sse.a4print.net.AsyncHttpCilentUtil;
 import ustc.sse.a4print.net.HostIp;
 
+
 public class DeliveryAddressActivity extends ListActivity implements ModifyAddressActivity.addDeliveryAddressListener {
 
     private List<Map<String, String>> mAddressData;

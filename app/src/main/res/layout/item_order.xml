@@ -132,7 +132,7 @@
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:src="@drawable/setting" />
+                />
             <TextView
                 android:id="@+id/print_printType_tv"
                 android:layout_width="wrap_content"

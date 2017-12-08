@@ -1,8 +1,6 @@
 package ustc.sse.a4print.fragment;
 
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -55,8 +53,8 @@ public class DocumentFragment extends ListFragment {
     private CustomListView customListView;
     private RadioButton rbtnSelectAll;
     private LinearLayout selectAllLayout;
-    private  TextView totalPages;
-    private  TextView NumberOfDocuments;
+    private TextView totalPages;
+    private TextView NumberOfDocuments;
     private LinearLayout printLayout;
 
     public DocumentFragment() {
@@ -68,43 +66,43 @@ public class DocumentFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v=inflater.inflate(R.layout.fragment_document,container,false);
-        mAdapter=new DocumentAdapter(getActivity());
+        View v = inflater.inflate(R.layout.fragment_document, container, false);
+        mAdapter = new DocumentAdapter(getActivity());
         initView(v);
         reLoadDocuments();
-        mDocData=list;
+        mDocData = list;
         setListAdapter(mAdapter);
         return v;
     }
 
     private void initView(View v) {
-        noDocuments= (TextView) v.findViewById(R.id.no_document);
-        rbtnSelectAll= (RadioButton) v.findViewById(R.id.document_select_all);
-        selectAllLayout= (LinearLayout) v.findViewById(R.id.document_select_all_layout);
-        totalPages= (TextView) v.findViewById(R.id.document_total_pages);
-        NumberOfDocuments= (TextView) v.findViewById(R.id.document_number_of_documents);
-        printLayout= (LinearLayout) v.findViewById(R.id.document_print_layout);
+        noDocuments = (TextView) v.findViewById(R.id.no_document);
+        rbtnSelectAll = (RadioButton) v.findViewById(R.id.document_select_all);
+        selectAllLayout = (LinearLayout) v.findViewById(R.id.document_select_all_layout);
+        totalPages = (TextView) v.findViewById(R.id.document_total_pages);
+        NumberOfDocuments = (TextView) v.findViewById(R.id.document_number_of_documents);
+        printLayout = (LinearLayout) v.findViewById(R.id.document_print_layout);
         selectAllLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (rbtnSelectAll.isChecked()){
+                if (rbtnSelectAll.isChecked()) {
                     rbtnSelectAll.setChecked(false);
-                    for(Map<String, Object> item:mDocData){
-                        item.put("isSelected",false);
+                    for (Map<String, Object> item : mDocData) {
+                        item.put("isSelected", false);
                     }
                     mAdapter.notifyDataSetChanged();
                     totalPages.setText("0页");
                     NumberOfDocuments.setText("打印(0)");
-                }else{
+                } else {
                     rbtnSelectAll.setChecked(true);
-                    int pages=0;
-                    for(Map<String, Object> item:mDocData){
-                        item.put("isSelected",true);
-                        pages+=Integer.parseInt(item.get("filePages").toString());
+                    int pages = 0;
+                    for (Map<String, Object> item : mDocData) {
+                        item.put("isSelected", true);
+                        pages += Integer.parseInt(item.get("filePages").toString());
                     }
                     mAdapter.notifyDataSetChanged();
-                    totalPages.setText(pages+"页");
-                    NumberOfDocuments.setText("打印("+mDocData.size()+")");
+                    totalPages.setText(pages + "页");
+                    NumberOfDocuments.setText("打印(" + mDocData.size() + ")");
                 }
             }
         });
@@ -112,33 +110,31 @@ public class DocumentFragment extends ListFragment {
             @Override
             public void onClick(View v) {
                 List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-                for (Map<String, Object> item:mDocData)
-                {
-                    if ((Boolean)item.get("isSelected")){
-                        Map<String, Object> map=new HashMap<String, Object>();
-                        map.put("docName",item.get("fileName"));
-                        map.put("docPages",item.get("filePages"));
-                        map.put("docPages_old",item.get("filePages"));
-                        map.put("id",item.get("fileId"));
+                for (Map<String, Object> item : mDocData) {
+                    if ((Boolean) item.get("isSelected")) {
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        map.put("docName", item.get("fileName"));
+                        map.put("docPages", item.get("filePages"));
+                        map.put("docPages_old", item.get("filePages"));
+                        map.put("id", item.get("fileId"));
                         map.put("docCopies", "1");
                         map.put("docPath", "internet");
-                        map.put("printType","打印类型");
+                        map.put("printType", "打印类型");
 
                         list.add(map);
                     }
                 }
-                if(list.size()>0) {
-                   PrintFragment listener;
-                    MainActivity.mFragmentTabHost.doTabChanged("打印",getFragmentManager().beginTransaction()).commit();
+                if (list.size() > 0) {
+                    PrintFragment listener;
+                    MainActivity.mFragmentTabHost.doTabChanged("打印", getFragmentManager().beginTransaction()).commit();
                     getActivity().getSupportFragmentManager().executePendingTransactions();
-                    listener= (PrintFragment) getActivity().getSupportFragmentManager().findFragmentByTag("打印");
+                    listener = (PrintFragment) getActivity().getSupportFragmentManager().findFragmentByTag("打印");
                     PrintFragment.mDocData = list;
                     PrintFragment.myDocAdapter.notifyDataSetChanged();
-                   listener.reSetListHeight();
+                    listener.reSetListHeight();
                     MainActivity.mFragmentTabHost.setCurrentTabByTag("打印");
-                }
-                else{
-                    T.showShort(getActivity(),"未选中文件！");
+                } else {
+                    T.showShort(getActivity(), "未选中文件！");
                 }
             }
         });
@@ -147,7 +143,7 @@ public class DocumentFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        customListView= (CustomListView) getListView();
+        customListView = (CustomListView) getListView();
         customListView.setonRefreshListener(new CustomListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -156,7 +152,7 @@ public class DocumentFragment extends ListFragment {
         });
     }
 
-    public final class ViewHolder{
+    public final class ViewHolder {
         public TextView fileName;
         public TextView filePages;
         public TextView filePrice;
@@ -167,14 +163,15 @@ public class DocumentFragment extends ListFragment {
         public LinearLayout moreLayout;
     }
 
-    class DocumentAdapter extends BaseAdapter{
+    class DocumentAdapter extends BaseAdapter {
 
         private LayoutInflater mInflater;
 
 
-        public DocumentAdapter(Context context){
+        public DocumentAdapter(Context context) {
             this.mInflater = LayoutInflater.from(context);
         }
+
         @Override
         public int getCount() {
             return mDocData.size();
@@ -195,53 +192,44 @@ public class DocumentFragment extends ListFragment {
             ViewHolder holder = null;
             if (convertView == null) {
 
-                holder=new ViewHolder();
+                holder = new ViewHolder();
 
                 convertView = mInflater.inflate(R.layout.item_documents, null);
-                holder.fileSelect= (RadioButton) convertView.findViewById(R.id.document_radio_select);
-                holder.fileName= (TextView) convertView.findViewById(R.id.document_tv_fileName);
-                holder.filePages= (TextView) convertView.findViewById(R.id.document_tv_filePages);
-                holder.filePrice= (TextView) convertView.findViewById(R.id.document_filePrice);
-                holder.more= (ImageView) convertView.findViewById(R.id.document_iv_more);
-                holder.fileImage= (ImageView) convertView.findViewById(R.id.document_iv_fileImage);
-                holder.itemLayout= (LinearLayout) convertView.findViewById(R.id.document_item_layout);
-                holder.moreLayout= (LinearLayout) convertView.findViewById(R.id.document_more_layout);
+                holder.fileSelect = (RadioButton) convertView.findViewById(R.id.document_radio_select);
+                holder.fileName = (TextView) convertView.findViewById(R.id.document_tv_fileName);
+                holder.filePages = (TextView) convertView.findViewById(R.id.document_tv_filePages);
+                holder.filePrice = (TextView) convertView.findViewById(R.id.document_filePrice);
+                holder.more = (ImageView) convertView.findViewById(R.id.document_iv_more);
+                holder.fileImage = (ImageView) convertView.findViewById(R.id.document_iv_fileImage);
+                holder.itemLayout = (LinearLayout) convertView.findViewById(R.id.document_item_layout);
+                holder.moreLayout = (LinearLayout) convertView.findViewById(R.id.document_more_layout);
                 convertView.setTag(holder);
 
-            }else {
-                holder = (ViewHolder)convertView.getTag();
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
 
             holder.fileName.setText(mDocData.get(position).get("fileName").toString());
-            holder.filePages.setText(mDocData.get(position).get("filePages").toString()+"页");
+            holder.filePages.setText(mDocData.get(position).get("filePages").toString() + "页");
             holder.filePrice.setText(mDocData.get(position).get("fileSize").toString());
-            String fileTypeStr=mDocData.get(position).get("fileType").toString();
-            if (fileTypeStr.equals("doc")){
+            String fileTypeStr = mDocData.get(position).get("fileType").toString();
+            if (fileTypeStr.equals("doc")) {
                 holder.fileImage.setImageResource(R.drawable.doc);
-            }else if (fileTypeStr.equals("docx"))
-            {
+            } else if (fileTypeStr.equals("docx")) {
                 holder.fileImage.setImageResource(R.drawable.docx);
-            }
-            else if (fileTypeStr.equals("pdf"))
-            {
+            } else if (fileTypeStr.equals("pdf")) {
                 holder.fileImage.setImageResource(R.drawable.pdf);
-            }else if (fileTypeStr.equals("jpeg"))
-            {
+            } else if (fileTypeStr.equals("jpeg")) {
                 holder.fileImage.setImageResource(R.drawable.jpeg);
-            }else if (fileTypeStr.equals("jpg"))
-            {
+            } else if (fileTypeStr.equals("jpg")) {
                 holder.fileImage.setImageResource(R.drawable.jpg);
-            }else if (fileTypeStr.equals("png"))
-            {
+            } else if (fileTypeStr.equals("png")) {
                 holder.fileImage.setImageResource(R.drawable.png);
-            }else if (fileTypeStr.equals("ppt"))
-            {
+            } else if (fileTypeStr.equals("ppt")) {
                 holder.fileImage.setImageResource(R.drawable.ppt);
-            }else if (fileTypeStr.equals("pptx"))
-            {
+            } else if (fileTypeStr.equals("pptx")) {
                 holder.fileImage.setImageResource(R.drawable.pptx);
-            }
-            else{
+            } else {
                 holder.fileImage.setImageResource(R.drawable.file);
             }
             holder.fileSelect.setChecked((Boolean) mDocData.get(position).get("isSelected"));
@@ -276,14 +264,14 @@ public class DocumentFragment extends ListFragment {
                 numOfDoc++;
             }
         }
-        totalPages.setText(pages+"页");
-        NumberOfDocuments.setText("打印("+numOfDoc+")");
+        totalPages.setText(pages + "页");
+        NumberOfDocuments.setText("打印(" + numOfDoc + ")");
     }
 
-    private void reLoadDocuments(){
+    private void reLoadDocuments() {
         list.clear();
-        AsyncHttpClient client= AsyncHttpCilentUtil.getInstance(getActivity());
-        client.post("http://"+ HostIp.ip+"/A4print/getUserAllFiles.do", null, new JsonHttpResponseHandler() {
+        AsyncHttpClient client = AsyncHttpCilentUtil.getInstance(getActivity());
+        client.post("http://" + HostIp.ip + "/A4print/getUserAllFiles.do", null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 //super.onSuccess(statusCode, headers, response);
@@ -374,20 +362,20 @@ public class DocumentFragment extends ListFragment {
     }
 
     private void deleteDocById(String fileId) {
-        RequestParams params=new RequestParams();
+        RequestParams params = new RequestParams();
         params.put("fileId", fileId);
-        AsyncHttpClient client= AsyncHttpCilentUtil.getInstance(getActivity());
-        client.post("http://"+HostIp.ip+"/A4print/removeFile.do", params, new JsonHttpResponseHandler() {
+        AsyncHttpClient client = AsyncHttpCilentUtil.getInstance(getActivity());
+        client.post("http://" + HostIp.ip + "/A4print/removeFile.do", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 JSONObject object = response;
                 try {
-                    boolean mes=object.getBoolean("success");
-                    if (mes){
-                        T.showShort(getActivity(),"删除成功");
+                    boolean mes = object.getBoolean("success");
+                    if (mes) {
+                        T.showShort(getActivity(), "删除成功");
                         reLoadDocuments();
-                    }else{
-                        T.showShort(getActivity(),"订单中包含该文件，不能删除！");
+                    } else {
+                        T.showShort(getActivity(), "订单中包含该文件，不能删除！");
                     }
 
                 } catch (JSONException e) {
@@ -409,8 +397,9 @@ public class DocumentFragment extends ListFragment {
         });
     }
 
-    public interface DocumentPageToPrintListener{
+    public interface DocumentPageToPrintListener {
         void documentPageToPrint(int count);
+
         void reSetListHeight();
     }
 }

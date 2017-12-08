@@ -35,7 +35,6 @@ public class User extends Application {
 
     public String getDefaultAddress() {
         return defaultAddress;
-
     }
 
     public void setDefaultAddress(String defaultAddress) {

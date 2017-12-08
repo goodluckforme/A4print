@@ -22,8 +22,7 @@
 
             <ImageView
                 android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/qrcode" />
+                android:layout_height="15dp" />
 
 
             <TextView
@@ -34,16 +33,18 @@
                 android:textSize="12sp" />
 
         </LinearLayout>
+
         <ImageView
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/whitesmoke"/>
+            android:background="@color/whitesmoke" />
 
 
         <ImageView
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/whitesmoke"/>
+            android:background="@color/whitesmoke" />
+
         <LinearLayout
             android:id="@+id/btn_item_toPay"
             android:layout_width="wrap_content"

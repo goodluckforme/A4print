@@ -288,7 +288,6 @@ public class FragmentTabHost extends TabHost
                 } else {
                     //ft.attach(newTab.fragment);
                     ft.show(newTab.fragment);
-
                 }
             }
             mLastTab = newTab;
